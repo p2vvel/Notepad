@@ -8,6 +8,12 @@ import moment from "moment";
 import NoteEditor from "./notepadeditor";
 
 
+//Copied from https://makandracards.com/makandra/15879-javascript-how-to-generate-a-regular-expression-from-a-string
+RegExp.escape = function(string) {
+    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+};
+
+
 class Notepad extends React.Component{
     constructor(props) {
         super(props);
@@ -23,8 +29,8 @@ class Notepad extends React.Component{
         this.updateNote = this.updateNote.bind(this);
         this.handleEditorCancel = this.handleEditorCancel.bind(this);
         this.handleEditorSave = this.handleEditorSave.bind(this);
-
         this.setupEditor = this.setupEditor.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
     }
 
     componentDidMount() {
@@ -97,7 +103,7 @@ class Notepad extends React.Component{
             }
             else{
                 // console.log(data_arr);
-                this.setState({all_notes: data_arr});
+                this.setState({all_notes: data_arr, filtered_notes: data_arr});
             }
         }
 
@@ -107,7 +113,7 @@ class Notepad extends React.Component{
     }
 
     getNotes(){
-        return this.state.all_notes.map(x => <Note key={x.key} title={x.title} content={x.content} edited={x.edited} created={x.created} handleDelete={this.deleteNote.bind(this, x.key)} editorActivation={this.setupEditor.bind(this, x)}/>);
+        return this.state.filtered_notes.map(x => <Note key={x.key} title={x.title} content={x.content} edited={x.edited} created={x.created} handleDelete={this.deleteNote.bind(this, x.key)} editorActivation={this.setupEditor.bind(this, x)}/>);
     }
 
     addNote(){
@@ -147,14 +153,27 @@ class Notepad extends React.Component{
         this.updateNote(new_note);
     }
 
+    handleFilterChange(new_filter){
+        //Terminating characters code copied from https://makandracards.com/makandra/15879-javascript-how-to-generate-a-regular-expression-from-a-string
+        let temp_filter = new RegExp(new_filter.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&').toLowerCase());
+
+        let temp = this.state.all_notes.filter(note =>
+            (note.title.toLowerCase().match(temp_filter) !== null || note.content.toLowerCase().match(temp_filter) !== null)
+        );
+        this.setState({
+            filter: new_filter,
+            filtered_notes: temp,
+        });
+    }
+
     render(){
         if(this.did_initialized === undefined)
             return (<></>);
         else{
             return (
                 <>
-                    <NotepadMenu/>
-                    {(this.state.all_notes.length !== 0 ? <Noteboard children={this.getNotes()}/> : <h5 style={{textAlign: "center", color: "white", margin: "20px"}}>There are no notes to show!</h5>)}
+                    <NotepadMenu handleFilterChange={this.handleFilterChange}/>
+                    {(this.state.filtered_notes.length !== 0 ? <Noteboard children={this.getNotes()}/> : <h5 style={{textAlign: "center", color: "white", margin: "20px"}}>There are no notes to show!</h5>)}
                     <AddButton handleClick={this.addNote}/>
                     {this.state.editor === true &&
                     <NoteEditor
