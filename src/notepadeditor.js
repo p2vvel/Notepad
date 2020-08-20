@@ -2,6 +2,8 @@ import React from "react";
 
 import {Card, Button, Form, OverlayTrigger, Tooltip} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ColorPickerForm from "./color_picker";
+
 
 
 class NoteEditor extends React.Component{
@@ -16,6 +18,7 @@ class NoteEditor extends React.Component{
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleContentChange = this.handleContentChange.bind(this);
         this.restoreState = this.restoreState.bind(this);
+        this.handleColorChange = this.handleColorChange.bind(this);
     }
 
     restoreState(props){
@@ -29,6 +32,7 @@ class NoteEditor extends React.Component{
         this.state = {
             temp_title: (this.edit ? props.target.title : ""),
             temp_content: (this.edit  ? props.target.content : ""),
+            temp_color: (this.edit ? props.target.color : "dark"), //domyślny kolor notatki to "dark" z bootstrapa
         };
     }
 
@@ -74,8 +78,15 @@ class NoteEditor extends React.Component{
         this.setState({temp_content: e.target.value})
     }
 
+    handleColorChange(new_color){
+        this.setState({temp_color: new_color});
+        // console.log(new_color);
+    }
+
     render(){
         let condition = this.state.temp_title === "" && this.state.temp_content === "";
+        let text = ["success", "warning", "info", "light"].find(e => e === this.state.temp_color) !== undefined ? "dark" : "light";
+        let variant = this.state.temp_color !== "dark" ? this.state.temp_color : "secondary";
         let save_button = (
             <Button onClick={() => this.props.onSave({
                 title: this.state.temp_title,
@@ -83,20 +94,24 @@ class NoteEditor extends React.Component{
                 created: this.edit ? this.props.target.created : new Date().getTime(),
                 edited: new Date().getTime(),
                 key: this.edit ? this.props.target.key : undefined,
-            })} variant="primary ml-1" disabled={condition} style={condition ? {pointerEvents: "none"} : {}}>Save</Button>);
+                color: this.state.temp_color,
+            })} variant={`${variant} mr-1 my-1`} disabled={condition} style={condition ? {pointerEvents: "none"} : {}}>Save</Button>);
+
+
 
         return (
             <div className="Note-edit-background" onClick={this.handleBackgroundClick}>
-                <Card border="black" bg="dark" text="light" className="Note-editable">
+                <Card border="black" bg={"dark"} text="light" className="Note-editable">
                     <Card.Body className="d-flex flex-column align-items-center">
-                        <Form.Control placeholder="Title" className="form-control m-2 bg-dark text-light" value={this.state.temp_title} rows="1" onChange={this.handleTitleChange}></Form.Control>
-                        <textarea placeholder="Content" spellCheck={false} className="form-control flex-grow-1 m-2 bg-dark text-light Note-content-editable" value={this.state.temp_content} onChange={this.handleContentChange}></textarea>
+                        <Form.Control placeholder="Title" className={`form-control m-2 bg-dark border-secondary text-light`} value={this.state.temp_title} rows="1" onChange={this.handleTitleChange}/>
+                        <textarea placeholder="Content" spellCheck={false} className={`form-control flex-grow-1 m-2 bg-dark border-secondary text-light Note-content-editable`} value={this.state.temp_content} onChange={this.handleContentChange}/>
                         <div className="d-flex justify-content-between w-100">
                             <div>
-                                {this.edit && <Button onClick={this.props.onDelete} variant="outline-secondary mr-1">Delete</Button>}{/*Shows delete button only if user is editing already existing note*/}
+                                {this.edit && <Button onClick={this.props.onDelete} variant={`outline-secondary mr-1 my-1`}>Delete</Button>}{/*Shows delete button only if user is editing already existing note*/}
                             </div>
-                            <div>
-                                <Button onClick={this.props.onCancel} variant="outline-secondary mr-1">Cancel</Button>
+                            <ColorPickerForm handleColorChange={this.handleColorChange} currentColor={this.state.temp_color}/>
+                            <div className="d-flex justify-content-end flex-wrap">
+                                <Button onClick={this.props.onCancel} variant={`outline-secondary mr-1 my-1`}>Cancel</Button>
                                 {condition
                                     ?
                                     <OverlayTrigger
@@ -117,22 +132,5 @@ class NoteEditor extends React.Component{
     }
 }
 
-function DisabledButton(condition, children){
-    let temp = children;
-    if(condition){
-        return (
-            <OverlayTrigger overlay={<Tooltip className="tooltip-disabled" style={{zIndex: 3000}}>Can't save empty Note!</Tooltip>}>
-                <span className="d-inline-block">
-                    {temp}
-                </span>
-            </OverlayTrigger>);
-    }
-    else{
-        return (
-            <>
-                {temp}
-            </>);
-    }
-}
 
 export default NoteEditor;
