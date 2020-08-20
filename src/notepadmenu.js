@@ -1,13 +1,14 @@
 import React from "react";
-import {Navbar, Nav, Form, Button, FormControl, Row, Col, Containem, InputGroup} from "react-bootstrap"
+import {Navbar, Form, Button, FormControl, InputGroup} from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
-import {PlusSquare, PlusCircle, Plus, X} from "react-bootstrap-icons"
-
+import {X} from "react-bootstrap-icons"
 
 class NotepadMenu extends React.Component{
     constructor(props) {
         super(props);
         this.state = {search_value: ""}
+
+        this.search_form_ref = React.createRef();   //search form ref, used to focus after cleaning
 
         this.handleChange = this.handleChange.bind(this);
         this.handleClear = this.handleClear.bind(this);
@@ -20,7 +21,10 @@ class NotepadMenu extends React.Component{
 
     handleClear(){
         this.setState({search_value: ""},
-            () => this.props.handleFilterChange(this.state.search_value));
+            () => {
+                this.props.handleFilterChange(this.state.search_value);
+                this.search_form_ref.current.focus();   //focus is not lost if search form is cleared
+            }, );
     }
 
     render(){
@@ -32,7 +36,7 @@ class NotepadMenu extends React.Component{
                 <Navbar.Collapse id="navbar-content" className="justify-content-end align-items-center">
                     <Form inline className="d-flex justify-content-end flex-grow-1">
                         <InputGroup style={{minWidth: "263px"}}>{/*minWith to prevent whole element from expanding after entering first character*/}
-                            <FormControl type="text" placeholder="Search notes..." className="my-1" value={this.state.search_value} onChange={this.handleChange}/>
+                            <FormControl type="text" placeholder="Search notes..." className="my-1" value={this.state.search_value} onChange={this.handleChange} ref={this.search_form_ref}/>
                             {this.state.search_value !== "" &&
                             <InputGroup.Append>
                                 <Button variant="light" className="my-1 border border-left-0" onClick={this.handleClear}>

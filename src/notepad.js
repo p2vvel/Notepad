@@ -8,10 +8,6 @@ import moment from "moment";
 import NoteEditor from "./notepadeditor";
 
 
-//Copied from https://makandracards.com/makandra/15879-javascript-how-to-generate-a-regular-expression-from-a-string
-RegExp.escape = function(string) {
-    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
-};
 
 
 class Notepad extends React.Component{
@@ -98,6 +94,7 @@ class Notepad extends React.Component{
                 temp.content = cursor.value.content;
                 temp.created = cursor.value.created;
                 temp.edited = cursor.value.edited;
+                temp.color = cursor.value.color;
                 data_arr.push(temp);
                 cursor.continue();
             }
@@ -113,7 +110,7 @@ class Notepad extends React.Component{
     }
 
     getNotes(){
-        return this.state.filtered_notes.map(x => <Note key={x.key} title={x.title} content={x.content} edited={x.edited} created={x.created} handleDelete={this.deleteNote.bind(this, x.key)} editorActivation={this.setupEditor.bind(this, x)}/>);
+        return this.state.filtered_notes.map(x => <Note key={x.key} title={x.title} content={x.content} edited={x.edited} created={x.created} color={x.color} handleDelete={this.deleteNote.bind(this, x.key)} editorActivation={this.setupEditor.bind(this, x)}/>);
     }
 
     addNote(){
@@ -131,7 +128,8 @@ class Notepad extends React.Component{
             title: new_note.title,
             content: new_note.content,
             edited: new_note.edited,
-            created: new_note.created},
+            created: new_note.created,
+            color: new_note.color},
             new_note.key);  //key is undefined if new note is being created - indexeddb will create it by itself
 
         request.onsuccess = () =>{
@@ -185,6 +183,7 @@ class Notepad extends React.Component{
             );
         }
     }
+
 }
 
 
