@@ -1,7 +1,9 @@
 import React from "react";
-import {Navbar, Form, Button, FormControl, InputGroup} from "react-bootstrap"
-import "bootstrap/dist/css/bootstrap.min.css"
-import {X} from "react-bootstrap-icons"
+import {Navbar, Form, Button, FormControl, InputGroup} from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {X, StickiesFill} from "react-bootstrap-icons";
+import "./fonts.css";
+
 
 class NotepadMenu extends React.Component{
     constructor(props) {
@@ -31,7 +33,10 @@ class NotepadMenu extends React.Component{
         return (
         <>
             <Navbar bg="dark" variant="dark" expand="sm"  sticky="top" className="justify-content-between">
-                <Navbar.Brand href="#">Notepad</Navbar.Brand>
+                <Navbar.Brand style={{fontFamily: "LuckiestGuy"}} className="d-flex align-items-start">
+                    <StickiesFill color="gold" className="mr-1"/>
+                    Notepad
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbar-content"/>
                 <Navbar.Collapse id="navbar-content" className="justify-content-end align-items-center">
                     <Form inline className="d-flex justify-content-end flex-grow-1">
