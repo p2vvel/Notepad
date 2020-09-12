@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/Notepad/static/css/main.97cdbac2.chunk.css",
+    "main.js": "/Notepad/static/js/main.a3cbf56a.chunk.js",
+    "main.js.map": "/Notepad/static/js/main.a3cbf56a.chunk.js.map",
+    "runtime-main.js": "/Notepad/static/js/runtime-main.61337d1a.js",
+    "runtime-main.js.map": "/Notepad/static/js/runtime-main.61337d1a.js.map",
+    "static/css/2.11829350.chunk.css": "/Notepad/static/css/2.11829350.chunk.css",
+    "static/js/2.fe67d1af.chunk.js": "/Notepad/static/js/2.fe67d1af.chunk.js",
+    "static/js/2.fe67d1af.chunk.js.map": "/Notepad/static/js/2.fe67d1af.chunk.js.map",
+    "index.html": "/Notepad/index.html",
+    "precache-manifest.6c58cd28a620edd186fb57e8a9777208.js": "/Notepad/precache-manifest.6c58cd28a620edd186fb57e8a9777208.js",
+    "service-worker.js": "/Notepad/service-worker.js",
+    "static/css/2.11829350.chunk.css.map": "/Notepad/static/css/2.11829350.chunk.css.map",
+    "static/css/main.97cdbac2.chunk.css.map": "/Notepad/static/css/main.97cdbac2.chunk.css.map",
+    "static/js/2.fe67d1af.chunk.js.LICENSE.txt": "/Notepad/static/js/2.fe67d1af.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.61337d1a.js",
+    "static/css/2.11829350.chunk.css",
+    "static/js/2.fe67d1af.chunk.js",
+    "static/css/main.97cdbac2.chunk.css",
+    "static/js/main.a3cbf56a.chunk.js"
+  ]
+}
