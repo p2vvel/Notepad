@@ -100,7 +100,9 @@ class Notepad extends React.Component{
             }
             else{
                 // console.log(data_arr);
-                this.setState({all_notes: data_arr, filtered_notes: data_arr});
+                this.setState({all_notes: data_arr});
+                this.handleFilterChange(this.state.filter);
+
             }
         }
 
@@ -171,7 +173,9 @@ class Notepad extends React.Component{
             return (
                 <>
                     <NotepadMenu handleFilterChange={this.handleFilterChange}/>
-                    {(this.state.filtered_notes.length !== 0 ? <Noteboard children={this.getNotes()}/> : <h5 style={{textAlign: "center", color: "white", margin: "20px"}}>There are no notes to show!</h5>)}
+                    {(this.state.filtered_notes.length !== 0 ? <Noteboard children={this.getNotes()}/> : <h5 style={{textAlign: "center", color: "white", margin: "20px"}}>
+                        {this.state.filter === "" ? "There are no notes to show!" : "No notes matching filter!"}
+                    </h5>)}
                     <AddButton handleClick={this.addNote}/>
                     {this.state.editor === true &&
                     <NoteEditor

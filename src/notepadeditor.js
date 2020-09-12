@@ -1,8 +1,10 @@
 import React from "react";
 
-import {Card, Button, Form, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Card, Button, Form, OverlayTrigger, Tooltip, Container, Col, Row} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ColorPickerForm from "./color_picker";
+
+import {Trash} from "react-bootstrap-icons";
 
 
 
@@ -44,11 +46,16 @@ class NoteEditor extends React.Component{
 
 
     componentDidMount(){
-        //pressing esc will cancel editing note or ask user if he wants to save it
-        window.addEventListener("keydown", (e) => {
+        this.escape_event = (e) => {
             if(e.key === "Escape")
-               this.handleBackgroundExit();
-        });
+                this.handleBackgroundExit();
+        };
+        //pressing esc will cancel editing note or ask user if he wants to save it
+        window.addEventListener("keydown", this.escape_event);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("keydown", this.escape_event);
     }
 
     handleBackgroundExit(){
@@ -58,7 +65,14 @@ class NoteEditor extends React.Component{
             window.confirm("Save document?");
 
         if (save)
-            this.props.onSave();
+            this.props.onSave({
+                title: this.state.temp_title,
+                content: this.state.temp_content,
+                created: this.edit ? this.props.target.created : new Date().getTime(),
+                edited: new Date().getTime(),
+                key: this.edit ? this.props.target.key : undefined,
+                color: this.state.temp_color,
+            });
         else
             this.props.onCancel();
     }
@@ -101,32 +115,39 @@ class NoteEditor extends React.Component{
 
         return (
             <div className="Note-edit-background" onClick={this.handleBackgroundClick}>
-                <Card border="black" bg={"dark"} text="light" className="Note-editable">
-                    <Card.Body className="d-flex flex-column align-items-center">
-                        <Form.Control placeholder="Title" className={`form-control m-2 bg-dark border-secondary text-light`} value={this.state.temp_title} rows="1" onChange={this.handleTitleChange}/>
-                        <textarea placeholder="Content" spellCheck={false} className={`form-control flex-grow-1 m-2 bg-dark border-secondary text-light Note-content-editable`} value={this.state.temp_content} onChange={this.handleContentChange}/>
-                        <div className="d-flex justify-content-between w-100">
-                            <div>
-                                {this.edit && <Button onClick={this.props.onDelete} variant={`outline-secondary mr-1 my-1`}>Delete</Button>}{/*Shows delete button only if user is editing already existing note*/}
-                            </div>
-                            <ColorPickerForm handleColorChange={this.handleColorChange} currentColor={this.state.temp_color}/>
-                            <div className="d-flex justify-content-end flex-wrap">
-                                <Button onClick={this.props.onCancel} variant={`outline-secondary mr-1 my-1`}>Cancel</Button>
-                                {condition
-                                    ?
-                                    <OverlayTrigger
-                                        overlay={<Tooltip className="tooltip-disabled" style={{zIndex: 3000}}>Can't save
-                                            empty Note!</Tooltip>}>
+                <Container fluid>
+                    <Row>
+                        <Col className="col-12 col-lg-10 offset-lg-1">
+                            <Card border="black" bg={"dark"} text="light" className="Note-editable">
+                                <Card.Body className="d-flex flex-column align-items-center">
+                                    <Form.Control placeholder="Title" className={`form-control m-2 bg-dark border-secondary text-light`} value={this.state.temp_title} rows="1" onChange={this.handleTitleChange}/>
+                                    <textarea placeholder="Content" spellCheck={false} className={`form-control flex-grow-1 m-2 bg-dark border-secondary text-light Note-content-editable`} value={this.state.temp_content} onChange={this.handleContentChange}/>
+                                    <div className="d-flex justify-content-between w-100">
+                                        <div>
+                                            {this.edit && <Button onClick={this.props.onDelete} variant={`outline-secondary mr-1 my-1`}>
+                                                <Trash/>
+                                            </Button>}{/*Shows delete button only if user is editing already existing note*/}
+                                        </div>
+                                        <ColorPickerForm handleColorChange={this.handleColorChange} currentColor={this.state.temp_color}/>
+                                        <div className="d-flex justify-content-end flex-wrap">
+                                            <Button onClick={this.props.onCancel} variant={`outline-secondary mr-1 my-1`}>Cancel</Button>
+                                            {condition
+                                                ?
+                                                <OverlayTrigger
+                                                    overlay={<Tooltip className="tooltip-disabled" style={{zIndex: 3000}}>Can't save empty Note!</Tooltip>}>
                                         <span className="d-inline-block">
                                             {save_button}
                                         </span>
-                                    </OverlayTrigger>
-                                    :
-                                    <>{save_button}</>}
-                            </div>
-                        </div>
-                    </Card.Body>
-                </Card>
+                                                </OverlayTrigger>
+                                                :
+                                                <>{save_button}</>}
+                                        </div>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
         );
     }
