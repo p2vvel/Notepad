@@ -11,11 +11,9 @@ class Noteboard extends React.Component{
         this.state = {children: props.children};
     }
 
-
     componentWillReceiveProps(nextProps, nextContext) {
         this.setState({children: nextProps.children})
     }
-
 
     render(){
         return (

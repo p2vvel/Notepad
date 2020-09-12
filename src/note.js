@@ -41,7 +41,6 @@ class Note extends React.Component{
                             <Card.Title>
                                 {this.state.title}
                             </Card.Title>
-                            {/*<Card.Text>{this.state.content}</Card.Text>*/}
                             <Card.Text>{this.state.content}</Card.Text>
                         </Card.Body>
                         <div className="d-flex justify-content-between"  style={{fontSize: "0.9em"}}>

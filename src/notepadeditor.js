@@ -29,12 +29,11 @@ class NoteEditor extends React.Component{
         //true for editing existing note, false for creating new note
         this.edit = this.props.target !== undefined;
 
-        // console.log(this.edit);
 
         this.state = {
             temp_title: (this.edit ? props.target.title : ""),
             temp_content: (this.edit  ? props.target.content : ""),
-            temp_color: (this.edit ? props.target.color : "dark"), //domyślny kolor notatki to "dark" z bootstrapa
+            temp_color: (this.edit ? props.target.color : "dark"), //default note color is bootstrap "dark"
         };
     }
 
@@ -94,7 +93,6 @@ class NoteEditor extends React.Component{
 
     handleColorChange(new_color){
         this.setState({temp_color: new_color});
-        // console.log(new_color);
     }
 
     render(){

@@ -45,15 +45,7 @@ class Notepad extends React.Component{
             this.db = request.result;
             this.did_initialized = true;
 
-            /*let req = this.db.transaction("Notes", "readwrite").objectStore("Notes");
-            req.put({title: "Lorem ipsum", content: "Dolor simen ament xddd", created: new Date().getTime(), edited: new Date().getTime()});
-            req.put({title: "Teścior", content: "Przykładowa notatka", created: new Date().getTime(), edited: new Date().getTime()});
-            req.put({title: "Alleluja i hoho", content: "no normalnie nie mam sił", created: new Date().getTime(), edited: new Date().getTime()});
-            req.put({title: "Ja naprawdę", content: "chcę być tylko szczęsliwy", created: new Date().getTime(), edited: new Date().getTime()});
-            req.put({title: "gówno i dupa", content: "chochoł", created: new Date().getTime(), edited: new Date().getTime()});//*/
-
-
-            this.updateNotesData();    //pobiera informacje o zapisanych notatkach z lokalnej bazy
+            this.updateNotesData();    //downloads note data from local db
 
             this.db.onerror = (e) => {
                 console.log("An error occured during connecting to DB: " + e.error);
@@ -79,7 +71,7 @@ class Notepad extends React.Component{
         }
     }
 
-    //pobranie danych notatek
+    //downloads notes data
     updateNotesData(){
         let data_arr = [];
         let request = this.db.transaction("Notes", "readwrite").objectStore("Notes").openCursor();
@@ -99,7 +91,6 @@ class Notepad extends React.Component{
                 cursor.continue();
             }
             else{
-                // console.log(data_arr);
                 this.setState({all_notes: data_arr});
                 this.handleFilterChange(this.state.filter);
 

@@ -21,7 +21,6 @@ class ColorPickerForm extends React.Component{
     }
 
     handleClick(value){
-        // console.log(value);
         this.props.handleColorChange(value);
         this.setState({current_color: value});
     }
